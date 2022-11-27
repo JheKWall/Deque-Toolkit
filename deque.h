@@ -10,6 +10,8 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
+#include <string>
+
 using namespace std;
 
 /**
@@ -26,7 +28,7 @@ class deque {
   T** blockmap; 
 
   //
-  unsigned int size, mapsize, blocksize, first_block, first_element;
+  unsigned int num_of_elements, map_size, block_size, first_block, first_element;
   
  public:
 
@@ -139,19 +141,56 @@ class deque {
  * @post 
  * 
  */
-  T &operator[](int index);
+  T& operator[](uint index);
 };
 
 template <typename T>
-T &operator[](int index) {
+deque<T>::deque() {
+  num_of_elements = 0;
+  first_block = 1;
+  first_element = 3;
+  block_size = 8;
+  map_size = 8;
+  blockmap = new T*[map_size];
 
-  if (index < 0 || index > size) {
-    cout << "Invalid Index" << endl;
-    return;
+  for (uint row = 0; row < map_size; row++) {
+    blockmap[row] = new T[block_size];
+    for (uint column = 0; column < block_size; column++) {
+      blockmap[row][column] = 0;
+    }
+  }
+
+}
+
+
+template <typename T>
+deque<T>::~deque() {
+  // deletes all the blocks
+  for (uint row = 0; row < map_size; row++) {
+    delete[] blockmap[row];
+  }  
+ 
+  // deletes the map to the blocks
+  delete[] blockmap;
+}
+
+
+template <typename T>
+T& deque<T>::operator[](uint i) {
+
+  // checks if index given is <0, which would be an invalid index
+  if (i < 0) {
+    throw string("Out of bounds");
+  }
+  // convert i to unsigned int
+  i = (unsigned int) i;
+  // checks if the index given is greater than the bounds of the map
+  if (i > num_of_elements) { // should this be >= ?
+    throw string("Out of bounds");
   }
   
   //Row Calculation
-  int row = first_block * ((first_element + i) / block-size);
+  int row = first_block * ((first_element + i) / block_size);
 
   //Column Calculation
   int col = (first_element + i) % block_size;
@@ -159,7 +198,6 @@ T &operator[](int index) {
   //Index && Return
   return blockmap[row][col];
 }
-
 
 
 
