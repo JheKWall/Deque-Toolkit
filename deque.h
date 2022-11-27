@@ -40,7 +40,18 @@ class deque {
  * 
  */
   deque();
-
+  
+/**
+ * Deq Parameterized constructor; useful for resizing a deque. Takes a block size and map size
+ *
+ * @param int block_size the number of ints stored in a block
+ * @param int map_size the number of blocks stored in the blockmap
+ * @pre 
+ * @post A deque has been instantiated with the given parameters
+ * 
+ */
+  deque(int block_size, int map_size);
+  
 /**
  * Deque destructor
  *
@@ -142,24 +153,88 @@ class deque {
  * 
  */
   T& operator[](uint index);
+
+
+/**
+ * Prints all the elements in a deque
+ *
+ * @pre A deque should exist with elements
+ * @return void 
+ * @post All elements across all blocks are printed to console
+ * 
+ */
+  void print();
+
+/**
+ * Resized the internal 2D array of the deque to be twice as large
+ *
+ * @pre A deque of a temp size
+ * @return void 
+ * @post The deque is now twice as large as it originally was with the contents still in the 2D array
+ * 
+ */
+  void resize();
 };
+
+
+template <typename T>
+void deque<T>::print() {
+  // loop through the 2D array
+  int row, col;
+  for (uint i = 0; i < num_of_elements; i++) {
+    row = first_block + ((first_element + i) / block_size);
+    col = (first_element + i) % block_size;
+    cout << blockmap[row][col] << " ";
+  }
+  cout << endl;
+}
+
 
 template <typename T>
 deque<T>::deque() {
+  // set helper variables
   num_of_elements = 0;
-  first_block = 1;
+  first_block = 3;
   first_element = 3;
   block_size = 8;
   map_size = 8;
+
+  // initialize 2D array
   blockmap = new T*[map_size];
 
   for (uint row = 0; row < map_size; row++) {
+    // fill map with blocks
     blockmap[row] = new T[block_size];
     for (uint column = 0; column < block_size; column++) {
+      // initialize all values to 0 in each block
       blockmap[row][column] = 0;
     }
   }
+}
 
+
+template <typename T>
+deque<T>::deque(int block_size, int map_size) {
+  // set helper variables
+  num_of_elements = 0;
+  this->block_size = 8;
+  this->map_size = 8;
+  
+  first_block = map_size/4;
+  first_element = block_size/4;
+ 
+
+  // initialize 2D array
+  blockmap = new T*[map_size];
+
+  for (uint row = 0; row < map_size; row++) {
+    // fill map with blocks
+    blockmap[row] = new T[block_size];
+    for (uint column = 0; column < block_size; column++) {
+      // initialize all values to 0 in each block
+      blockmap[row][column] = 0;
+    }
+  }
 }
 
 
@@ -172,6 +247,65 @@ deque<T>::~deque() {
  
   // deletes the map to the blocks
   delete[] blockmap;
+}
+
+
+template <typename T>
+uint deque<T>::size() {
+  return num_of_elements;
+}
+
+
+template <typename T>
+void deque<T>::push_front(T n) {
+  // calculate the row and column the index 0 element should be at
+  int row = first_block;
+  int col = first_element;
+  cout << "First element at [" << row << "][" << col
+       << "]" << endl;
+
+  // move backward one position
+  col -= 1;
+  // did that break stuff?
+  if (col < 0) {
+    col = block_size - 1;
+    row -= 1;
+  }
+
+  // add n at the position before current [0] index
+  cout << "Putting " << n << " at [" << row
+       << "][" << col << "]" << endl;
+  blockmap[row][col] = n;
+  
+  // adjust member variables
+  num_of_elements++;
+  first_block = row;
+  first_element = col;
+}
+
+
+template <typename T>
+void deque<T>::push_back(T n) {
+  // calculate the row and column of the last element
+  int row = first_block + ((first_element + num_of_elements -1) /block_size);
+  int col = (first_element + num_of_elements -1) % block_size;
+  cout << "last element at [" << row << "][" << col
+       << "]" << endl;
+
+  // move forward one position
+  col += 1;
+
+  // did that break something? uh oh too big? big boy go boom?
+  if (col >= block_size) {
+    col = 0;
+    row += 1;
+  }
+
+  // set the position after the last element to n
+  blockmap[row][col] = n;
+
+  //adjust member variables
+  num_of_elements++;
 }
 
 
@@ -190,7 +324,7 @@ T& deque<T>::operator[](uint i) {
   }
   
   //Row Calculation
-  int row = first_block * ((first_element + i) / block_size);
+  int row = first_block + ((first_element + i) / block_size);
 
   //Column Calculation
   int col = (first_element + i) % block_size;
