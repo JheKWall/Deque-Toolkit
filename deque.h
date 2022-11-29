@@ -300,8 +300,8 @@ void deque<T>::push_front(T n) {
 template <typename T>
 void deque<T>::push_back(T n) {
   // calculate the row and column of the last element
-  int row = first_block + ((first_element + num_of_elements -1) /block_size);
-  int col = (first_element + num_of_elements -1) % block_size;
+  uint row = first_block + ((first_element + num_of_elements -1) /block_size);
+  uint col = (first_element + num_of_elements -1) % block_size;
 
 
   // move forward one position
@@ -419,7 +419,13 @@ void deque<T>::resize() {
 }
 
 
-
+template <typename T>
+bool deque<T>::empty() {
+  if (num_of_elements == 0)
+    return true;
+  else
+    return false;
+}
 
 
 
