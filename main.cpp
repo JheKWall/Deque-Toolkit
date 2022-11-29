@@ -15,6 +15,8 @@ using namespace std;
 
 int main() {
   deque<int> mydeque;
+  deque<int> test;
+  
   
   
   if (mydeque.empty())
@@ -56,34 +58,36 @@ int main() {
 
   cout << "Popping all elements in array..." << endl;
 
-  for(int i = 0; i < mydeque.size(); i++) {
+  unsigned int temp = mydeque.size();
+  
+  for(unsigned int i = 0; i < temp; i++) {
     if(i % 2)
-      mydeque.pop_back(i);
+      mydeque.pop_back();
     else
-      mydeque.pop_front(i);
+      mydeque.pop_front();
   }
-
+  
   cout << "All elements popped!" << endl << endl;
 
 
   cout << "Testing overloaded []'s..." << endl << endl;
   cout << "Creating deque of 5 integers" << endl;
 
-  for(int i = 0; i < 5; i++){
+  for(unsigned int i = 0; i < 5; i++){
     mydeque.push_back(i);
   }
 
   cout << "Printing deque using []'s: " << endl;
-  for(int i = 0; i < mydeque.size(); i++) {
-    cout << "mydeque[i]: " << mydeque[i] << endl;
+  for(unsigned int i = 0; i < mydeque.size(); i++) {
+    cout << "mydeque[" << i <<"]: " << mydeque[i] << endl;
   }
 
   cout << "Modifying deque data using []'s:" << endl;
   mydeque[0] = 42;
   mydeque[3] = 7777;
 
-  for(int i = 0; i < mydeque.size(); i++) {
-    cout << "mydeque[i]: " << mydeque[i] << endl;
+  for(unsigned int i = 0; i < mydeque.size(); i++) {
+    cout << "mydeque[" << i << "]: " << mydeque[i] << endl;
   }
   
   return 0;

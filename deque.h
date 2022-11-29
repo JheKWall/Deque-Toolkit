@@ -166,7 +166,7 @@ class deque {
  * @post 
  * 
  */
-  T& operator[](uint index);
+  T& operator[](int index);
 
 
 /**
@@ -296,13 +296,18 @@ void deque<T>::push_front(T n) {
 template <typename T>
 void deque<T>::pop_front() {
   // limiter so we do not go into negative size
-  if (size == 0) {
+  if (num_of_elements == 0) {
     return;
   }
   
   // Decrement size by 1, increment first_element by 1
-  size--;
+  num_of_elements--;
   first_element++;
+
+  if(first_element > block_size) {
+    first_element = 0;
+    first_block++;
+  }
 }
 
 template <typename T>
@@ -357,33 +362,34 @@ void deque<T>::push_back(T n) {
 template <typename T>
 void deque<T>::pop_back() {
   // limiter so we do not go into negative size
-  if (size == 0) {
+  if (num_of_elements == 0) {
     return;
   }
 
   // Decrement size by 1
-  size--;
+  num_of_elements--;
+
 }
 
 template <typename T>
-T& deque<T>::operator[](uint i) {
+T& deque<T>::operator[](int i) {
 
   // checks if index given is <0, which would be an invalid index
   if (i < 0) {
     throw std::out_of_range("Index given out of bounds");
   }
   // convert i to unsigned int
-  i = (unsigned int) i;
+  unsigned int index = i;
   // checks if the index given is greater than the bounds of the map
-  if (i >= num_of_elements) { // should this be >= ?
+  if (index >= num_of_elements) { // should this be >= ?
     throw std::out_of_range("Index given out of bounds");
   }
   
   //Row Calculation
-  int row = first_block + ((first_element + i) / block_size);
+  int row = first_block + ((first_element + index) / block_size);
 
   //Column Calculation
-  int col = (first_element + i) % block_size;
+  int col = (first_element + index) % block_size;
 
   //Index && Return
   return blockmap[row][col];
