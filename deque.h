@@ -1,6 +1,6 @@
 /**
  * @file deque.h
- * @author Kenneth Wallace
+ * @author Kenneth Wallace, Jackson Horton, William Hayes
  * @date 2022-11-17
  * @brief Deque header file
  * 
@@ -9,8 +9,6 @@
 
 #ifndef DEQUE_H
 #define DEQUE_H
-
-#include <string>
 
 using namespace std;
 
@@ -205,10 +203,6 @@ deque<T>::deque() {
   for (uint row = 0; row < map_size; row++) {
     // fill map with blocks
     blockmap[row] = new T[block_size];
-    for (uint column = 0; column < block_size; column++) {
-      // initialize all values to 0 in each block
-      blockmap[row][column] = 0;
-    }
   }
 }
 
@@ -230,10 +224,6 @@ deque<T>::deque(int block_size, int map_size) {
   for (uint row = 0; row < map_size; row++) {
     // fill map with blocks
     blockmap[row] = new T[block_size];
-    for (uint column = 0; column < block_size; column++) {
-      // initialize all values to 0 in each block
-      blockmap[row][column] = 0;
-    }
   }
 }
 
@@ -296,7 +286,18 @@ void deque<T>::push_front(T n) {
   first_element = col;
 }
 
+template <typename T>
+void deque<T>::pop_front() {
+  // limiter so we do not go into negative size
+  if (size == 0) {
+    return;
+  }
   
+  // Decrement size by 1, increment first_element by 1
+  size--;
+  first_element++;
+}
+
 template <typename T>
 void deque<T>::push_back(T n) {
   // calculate the row and column of the last element
@@ -345,6 +346,17 @@ void deque<T>::push_back(T n) {
   num_of_elements++;
 }
 
+
+template <typename T>
+void deque<T>::pop_back() {
+  // limiter so we do not go into negative size
+  if (size == 0) {
+    return;
+  }
+
+  // Decrement size by 1
+  size--;
+}
 
 template <typename T>
 T& deque<T>::operator[](uint i) {
@@ -403,10 +415,6 @@ void deque<T>::resize() {
   for (uint row = 0; row < map_size; row++) {
     // fill map with blocks
     blockmap[row] = new T[block_size];
-    for (uint column = 0; column < block_size; column++) {
-      // initialize all values to 0 in each block
-      blockmap[row][column] = 0;
-    }
   }
 
   uint temp_num_of_elements = num_of_elements;
@@ -427,8 +435,20 @@ bool deque<T>::empty() {
     return false;
 }
 
+template <typename T>
+T deque<T>::front() {
+  return blockmap[first_block][first_element];
+}
 
-
+template <typename T>
+T deque<T>::back() {
+  // calculate the row and column of the last element
+  uint row = first_block + ((first_element + num_of_elements -1) /block_size);
+  uint col = (first_element + num_of_elements -1) % block_size;
+  
+  // return last element (back)
+  return blockmap[row][col];
+}
 
 
 #endif //DEQUE_H
