@@ -22,11 +22,22 @@ using namespace std;
 template <typename T>
 class deque {
  private:
-  //
+  // The Whole 2D Array
+  // Used for accessing the blocks and data
   T** blockmap; 
 
-  //
+  // Index variables used to locate data within the blockmap
   unsigned int num_of_elements, map_size, block_size, first_block, first_element;
+
+/**
+ * Resized the internal 2D array of the deque to be twice as large
+ *
+ * @pre A deque of a temp size
+ * @return void 
+ * @post The deque is now twice as large as it originally was with the contents still in the 2D array
+ * 
+ */
+  void resize();
   
  public:
 
@@ -163,15 +174,6 @@ class deque {
  */
   void print();
 
-/**
- * Resized the internal 2D array of the deque to be twice as large
- *
- * @pre A deque of a temp size
- * @return void 
- * @post The deque is now twice as large as it originally was with the contents still in the 2D array
- * 
- */
-  void resize();
 };
 
 
