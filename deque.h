@@ -27,6 +27,11 @@ class deque {
   T** blockmap; 
 
   // Index variables used to locate data within the blockmap
+  // num_of_elements is the total number of used elements in the blockmap.
+  // map_size is the size of the array holding the blocks.
+  // block_size is the size of each block holding the elements.
+  // first_block is the block containing the first element.
+  // first_element points to the first data in the blockmap.
   unsigned int num_of_elements, map_size, block_size, first_block, first_element;
 
 /**
