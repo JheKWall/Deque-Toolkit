@@ -28,3 +28,4 @@ When a deque is full on either side and push_front() or push_back() is used, it 
 - The starting block and map sizes are 8.
 - When resizing, both the block sizes and amount of blocks are doubled.
 - Pop_front() and pop_back() do not delete the items at the front or back, but rather modify the size so that they are no longer included within the accessible space by the other class methods.
+- The class uses templated types, meaning we implemented the bonus part of the assignment.
